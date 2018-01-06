@@ -1,0 +1,23 @@
+build/
+captures/
+
+# Crashlytics configuations
+com_crashlytics_export_strings.xml
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Gradle generated files
+.gradle/
+
+# User-specific configurations
+*.iml
+.idea/*.xml
+.idea/*/*.xml
+.idea/libraries/
+.idea/dictionaries/
+!.idea/codeStyleSettings.xml
+
+# OS-specific files
+.DS_Store
+*.apk

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:minHeight="56dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/spacing_large"
+        android:paddingLeft="@dimen/spacing_large"
+        android:paddingRight="@dimen/spacing_large"
+        android:paddingTop="@dimen/spacing_large">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_small"
+            android:text="User ID:"
+            android:textColor="@color/grey_700"
+            android:textSize="@dimen/text_large" />
+
+        <EditText
+            android:id="@+id/userIdEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="kirimin"
+            android:inputType="text"
+            android:lines="1"
+            android:textColor="@color/grey_700"
+            android:textColorHint="@color/grey_300"
+            android:textSize="@dimen/text_large" />
+
+        <Button
+            android:id="@+id/submitButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="get user"
+            android:textColor="@color/grey_700"
+            android:textSize="@dimen/text_small" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/parentLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="@dimen/spacing_large"
+                android:paddingLeft="@dimen/spacing_large"
+                android:paddingRight="@dimen/spacing_large"
+                android:paddingTop="@dimen/spacing_large"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/iconImage"
+                        android:layout_width="128dp"
+                        android:layout_height="128dp"
+                        android:layout_gravity="center_horizontal" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/spacing_large">
+
+                        <TextView
+                            android:id="@+id/nameText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:lines="1"
+                            android:textColor="@color/grey_900"
+                            android:textSize="@dimen/text_large"
+                            android:textStyle="bold"
+                            tools:text="きりみん" />
+
+                        <TextView
+                            android:id="@+id/locationText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/nameText"
+                            android:layout_marginTop="@dimen/spacing_large"
+                            android:ellipsize="end"
+                            android:lines="1"
+                            android:textColor="@color/grey_700"
+                            android:textSize="@dimen/text_small"
+                            tools:text="Tokyo" />
+
+                        <TextView
+                            android:id="@+id/companyText"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/locationText"
+                            android:layout_marginTop="@dimen/spacing_small"
+                            android:ellipsize="end"
+                            android:lines="1"
+                            android:textColor="@color/grey_700"
+                            android:textSize="@dimen/text_small"
+                            android:visibility="gone"
+                            tools:text="company"
+                            tools:visibility="visible" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/linkText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:autoLink="web"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:textSize="@dimen/text_large"
+                    tools:text="link here"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/mailText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:autoLink="email"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:textSize="@dimen/abc_text_size_medium_material"
+                    tools:text="mail here"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_small"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:text="Languages"
+                    android:textColor="@color/grey_900"
+                    android:textSize="@dimen/text_large2" />
+
+                <LinearLayout
+                    android:id="@+id/languageLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_small"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:text="Repositories"
+                    android:textColor="@color/grey_900"
+                    android:textSize="@dimen/text_large2" />
+
+                <LinearLayout
+                    android:id="@+id/repositoryLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+            </LinearLayout>
+        </ScrollView>
+    </FrameLayout>
+
+</LinearLayout>
