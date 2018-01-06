@@ -2,6 +2,7 @@ package me.kirimin.droidkaigikirimindemoapp.domain
 
 import me.kirimin.droidkaigikirimindemoapp.data.entity.RepositoryEntity
 import me.kirimin.droidkaigikirimindemoapp.data.entity.UserEntity
+import me.kirimin.droidkaigikirimindemoapp.data.repository.UserRepository
 
 class User(private val entity: UserEntity, private val repos: List<RepositoryEntity>) {
 

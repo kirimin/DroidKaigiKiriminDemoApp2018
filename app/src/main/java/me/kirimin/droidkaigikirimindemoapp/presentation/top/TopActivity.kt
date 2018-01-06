@@ -2,94 +2,117 @@ package me.kirimin.droidkaigikirimindemoapp.presentation.top
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.KeyEvent
-import android.view.View
 import com.squareup.picasso.Picasso
 import me.kirimin.droidkaigikirimindemoapp.R
-import me.kirimin.droidkaigikirimindemoapp.domain.User
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
+import android.widget.Toast
 import me.kirimin.droidkaigikirimindemoapp.domain.Repository
 import kotlinx.android.synthetic.main.activity_top.*
+import me.kirimin.droidkaigikirimindemoapp.domain.Language
 
-class TopActivity : AppCompatActivity() {
+interface TopView {
 
-    lateinit var presenter: TopPresenter
+    class TopActivity : AppCompatActivity(), TopView {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_top)
+        lateinit var presenter: TopPresenter
 
-        presenter = TopPresenter(this)
-        presenter.onCreate()
-        toolbar.title = "Who on GitHub"
-        submitButton.setOnClickListener {
-            hideKeyBoard()
-            parentLayout.visibility = View.GONE
-            presenter.getUserInfo(userIdEditText)
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            presenter = TopPresenter(this)
+            presenter.onCreate()
         }
-        userIdEditText.setOnKeyListener { view, keyCode, event ->
-            if (KeyEvent.KEYCODE_ENTER == keyCode && event.action == KeyEvent.ACTION_UP) {
-                hideKeyBoard()
-                parentLayout.visibility = View.GONE
-                presenter.getUserInfo(userIdEditText)
+
+        override fun onDestroy() {
+            presenter.onDestroy()
+            super.onDestroy()
+        }
+
+        override fun initView() {
+            setContentView(R.layout.activity_top)
+            toolbar.title = "Who on GitHub"
+            submitButton.setOnClickListener {
+                presenter.onSubmitButtonClick(userIdEditText.text.toString())
             }
-            false
+            userIdEditText.setOnKeyListener { _, keyCode, event ->
+                presenter.onUserIdEditTextKeyListener(userIdEditText.text.toString(), keyCode, event.action)
+                false
+            }
         }
-    }
 
-    override fun onDestroy() {
-        presenter.onDestroy()
-        super.onDestroy()
-    }
-
-    fun setUserInfo(user: User) {
-        parentLayout.visibility = View.VISIBLE
-        nameText.text = user.name
-        if (user.location.isNullOrEmpty()) {
-            locationText.visibility = View.GONE
-        } else {
-            locationText.visibility = View.VISIBLE
-            locationText.text = user.location
+        override fun showErrorToast(text: String) {
+            Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
         }
-        if (user.mail.isNullOrEmpty()) {
-            mailText.visibility = View.GONE
-        } else {
-            mailText.visibility = View.VISIBLE
-            mailText.text = user.mail
-        }
-        if (user.link.isNullOrEmpty()) {
-            linkText.visibility = View.GONE
-        } else {
-            linkText.visibility = View.VISIBLE
-            linkText.text = user.link
-        }
-        Picasso.with(this).load(user.iconUrl).fit().into(iconImage)
-    }
 
-    private fun hideKeyBoard() {
-        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
-    }
+        override fun setProgressBarVisibility(visibility: Int) {
+            progressBar.visibility = visibility
+        }
 
-    fun setLanguages(languages: List<Pair<String, List<Repository>>>) {
-        languages.forEach {
+        override fun setParentLayoutVisibility(visibility: Int) {
+            parentLayout.visibility = visibility
+        }
+
+        override fun hideKeyBoard() {
+            val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(currentFocus!!.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+        }
+
+        override fun setUserName(name: String) {
+            nameText.text = name
+        }
+
+        override fun setLocationTextAndVisibility(visibility: Int, text: String) {
+            locationText.visibility = visibility
+            locationText.text = text
+        }
+
+        override fun setLinkTextAndVisibility(visibility: Int, text: String) {
+            linkText.visibility = visibility
+            linkText.text = text
+        }
+
+        override fun setMailTextAndVisibility(visibility: Int, text: String) {
+            mailText.visibility = visibility
+            mailText.text = text
+        }
+
+        override fun setIcon(iconUrl: String) {
+            Picasso.with(this).load(iconUrl).fit().into(iconImage)
+        }
+
+        override fun setIconVisibility(visibility: Int) {
+            iconImage.visibility = visibility
+        }
+
+        override fun addLanguageView(language: Language) {
             val languageView = layoutInflater.inflate(R.layout.view_language, null)
-            languageView.findViewById<TextView>(R.id.userInfoLanguageName).text = it.first
-            languageView.findViewById<TextView>(R.id.userInfoLanguageCount).text = it.second.count().toString()
-            languageView.findViewById<TextView>(R.id.userInfoLanguageStarCount).text = it.second.map { it.starCount }.sum().toString()
+            languageView.findViewById<TextView>(R.id.userInfoLanguageName).text = language.name
+            languageView.findViewById<TextView>(R.id.userInfoLanguageCount).text = language.languageCount
+            languageView.findViewById<TextView>(R.id.userInfoLanguageStarCount).text = language.starCount
             languageLayout.addView(languageView)
         }
-    }
 
-    fun setRepositories(repositories: List<Repository>) {
-        repositories.forEach {
+        override fun addRepositoryView(repository: Repository) {
             val repositoryView = layoutInflater.inflate(R.layout.view_repository, null)
-            repositoryView.findViewById<TextView>(R.id.userInfoRepositoryName).text = it.name
-            repositoryView.findViewById<TextView>(R.id.userInfoRepositoryLanguage).text = it.language
-            repositoryView.findViewById<TextView>(R.id.userInfoRepositoryDescription).text = it.description
-            repositoryView.findViewById<TextView>(R.id.userInfoRepositoryStarCount).text = it.starCount.toString()
+            repositoryView.findViewById<TextView>(R.id.userInfoRepositoryName).text = repository.name
+            repositoryView.findViewById<TextView>(R.id.userInfoRepositoryLanguage).text = repository.language
+            repositoryView.findViewById<TextView>(R.id.userInfoRepositoryDescription).text = repository.description
+            repositoryView.findViewById<TextView>(R.id.userInfoRepositoryStarCount).text = repository.starCount.toString()
             repositoryLayout.addView(repositoryView)
         }
     }
+
+    fun initView()
+    fun showErrorToast(text: String)
+    fun setProgressBarVisibility(visibility: Int)
+    fun setParentLayoutVisibility(visibility: Int)
+    fun hideKeyBoard()
+    fun setUserName(name: String)
+    fun setLocationTextAndVisibility(visibility: Int, text: String)
+    fun setMailTextAndVisibility(visibility: Int, text: String)
+    fun setLinkTextAndVisibility(visibility: Int, text: String)
+    fun setIcon(iconUrl: String)
+    fun setIconVisibility(visibility: Int)
+    fun addLanguageView(language: Language)
+    fun addRepositoryView(repository: Repository)
 }
