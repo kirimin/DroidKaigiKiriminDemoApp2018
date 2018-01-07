@@ -7,9 +7,8 @@ import me.kirimin.droidkaigikirimindemoapp.domain.Language
 import me.kirimin.droidkaigikirimindemoapp.domain.Repository
 import me.kirimin.droidkaigikirimindemoapp.domain.User
 
-class TopPresenter(val view: TopView) {
+class TopPresenter(val view: TopView, val useCase: TopUseCase) {
 
-    val useCase = TopUseCase()
     lateinit var disposables: CompositeDisposable
     var user: User? = null
 
@@ -58,7 +57,7 @@ class TopPresenter(val view: TopView) {
             if (user.link.isNullOrEmpty()) {
                 view.setLinkTextAndVisibility(View.GONE, "")
             } else {
-                view.setLinkTextAndVisibility(View.GONE, user.link!!)
+                view.setLinkTextAndVisibility(View.VISIBLE, user.link!!)
             }
             if (user.iconUrl != null) {
                 view.setIconVisibility(View.VISIBLE)

@@ -50,6 +50,11 @@ dependencies {
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit"
 
     testImplementation 'junit:junit:4.12'
+
+    def mockito = '2.8.47'
+    testImplementation "org.mockito:mockito-inline:$mockito"
+    androidTestImplementation "org.mockito:mockito-android:$mockito"
+
 }
 repositories {
     mavenCentral()

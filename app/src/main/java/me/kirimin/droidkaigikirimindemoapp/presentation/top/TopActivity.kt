@@ -19,7 +19,7 @@ interface TopView {
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
-            presenter = TopPresenter(this)
+            presenter = TopPresenter(this, TopUseCase())
             presenter.onCreate()
         }
 
