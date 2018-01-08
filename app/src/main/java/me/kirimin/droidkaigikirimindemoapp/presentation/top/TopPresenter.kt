@@ -66,35 +66,15 @@ class TopPresenter(val view: TopView, val useCase: TopUseCase) {
                 view.setIconVisibility(View.INVISIBLE)
             }
 
-            getLanguages(user.repositories).forEach {
+            user.languages.forEach {
                 view.addLanguageView(it)
             }
-            sortRepositories(user.repositories).forEach {
+            user.sortedRepositories.forEach {
                 view.addRepositoryView(it)
             }
         }, {
             view.setProgressBarVisibility(View.GONE)
             view.showErrorToast("network error")
         }).also { disposables.add(it) }
-    }
-
-    /**
-     * リポジトリを言語ごとに言語名とリポジトリリストのPairにまとめたListを返す
-     */
-    private fun getLanguages(repositories: List<Repository>): List<Language> {
-        return repositories
-                .filter { it.language != null }
-                .groupBy { it.language!! }
-                .toList().sortedByDescending { language -> language.second.count() }
-                .map { Language(it.first, it.second) }
-    }
-
-    /**
-     * リポジトリをスターの数とforkか否かでソートして返す
-     */
-    private fun sortRepositories(repositories: List<Repository>): List<Repository> {
-        return repositories
-                .sortedByDescending(Repository::starCount)
-                .sortedBy(Repository::isFork)
     }
 }

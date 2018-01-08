@@ -56,7 +56,10 @@ dependencies {
     androidTestImplementation "org.mockito:mockito-android:$mockito"
     testImplementation "com.nhaarman:mockito-kotlin-kt1.1:1.5.0"
 
+    testImplementation "com.taroid.knit:knit:0.1.2"
+
 }
 repositories {
     mavenCentral()
+    maven { url 'http://dl.bintray.com/ngsw-taro/maven' }
 }

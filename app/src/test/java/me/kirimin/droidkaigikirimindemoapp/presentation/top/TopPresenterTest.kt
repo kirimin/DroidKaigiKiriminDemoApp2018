@@ -1,4 +1,4 @@
-package me.kirimin.droidkaigikirimindemoapp
+package me.kirimin.droidkaigikirimindemoapp.presentation.top
 
 import android.view.KeyEvent
 import android.view.View
@@ -6,6 +6,8 @@ import com.nhaarman.mockito_kotlin.*
 import io.reactivex.Single
 import me.kirimin.droidkaigikirimindemoapp.data.entity.RepositoryEntity
 import me.kirimin.droidkaigikirimindemoapp.data.entity.UserEntity
+import me.kirimin.droidkaigikirimindemoapp.domain.Language
+import me.kirimin.droidkaigikirimindemoapp.domain.Repository
 import me.kirimin.droidkaigikirimindemoapp.domain.User
 import me.kirimin.droidkaigikirimindemoapp.presentation.top.TopPresenter
 import me.kirimin.droidkaigikirimindemoapp.presentation.top.TopUseCase
@@ -152,6 +154,38 @@ class TopPresenterTest {
         presenter.onCreate()
         success()
         failed()
+    }
+
+    @Test
+    fun addRepositoryViewTest() {
+        val repositoryEntities = listOf(
+                RepositoryEntity(name = "a"),
+                RepositoryEntity(name = "b"),
+                RepositoryEntity(name = "c")
+        )
+        whenever(useCaseMock.fetchUserInfo("kirimin")).thenReturn(Single.just(User(UserEntity(name = "kirimin"), repositoryEntities)))
+
+        presenter.onCreate()
+        presenter.onSubmitButtonClick("kirimin")
+        verify(viewMock, times(1)).addRepositoryView(Repository(RepositoryEntity(name = "a")))
+        verify(viewMock, times(1)).addRepositoryView(Repository(RepositoryEntity(name = "b")))
+        verify(viewMock, times(1)).addRepositoryView(Repository(RepositoryEntity(name = "c")))
+    }
+
+    @Test
+    fun addLanguageViewTest() {
+        val a = mock<Language>()
+        val b = mock<Language>()
+        val c = mock<Language> { on { name } doReturn "c" }
+        val languagesMock = listOf(a, b, c)
+        val userMock = mock<User> { on { languages } doReturn languagesMock }
+        whenever(useCaseMock.fetchUserInfo("kirimin")).thenReturn(Single.just(userMock))
+
+        presenter.onCreate()
+        presenter.onSubmitButtonClick("kirimin")
+        verify(viewMock, times(1)).addLanguageView(a)
+        verify(viewMock, times(1)).addLanguageView(b)
+        verify(viewMock, times(1)).addLanguageView(c)
     }
 
     private fun initializeMocks() {
