@@ -54,6 +54,7 @@ dependencies {
     def mockito = '2.8.47'
     testImplementation "org.mockito:mockito-inline:$mockito"
     androidTestImplementation "org.mockito:mockito-android:$mockito"
+    testImplementation "com.nhaarman:mockito-kotlin-kt1.1:1.5.0"
 
 }
 repositories {
