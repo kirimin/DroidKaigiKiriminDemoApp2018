@@ -36,11 +36,6 @@ class TopPresenterTest {
     }
 
     @Test
-    fun onSubmitButtonClickTestWithEmptyText() {
-        presenter.onCreate()
-    }
-
-    @Test
     fun onSubmitButtonClickTest() {
         fun withEmptyText() {
             initializeMocks()
