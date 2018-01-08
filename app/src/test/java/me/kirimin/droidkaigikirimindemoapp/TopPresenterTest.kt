@@ -1,5 +1,6 @@
 package me.kirimin.droidkaigikirimindemoapp
 
+import android.view.KeyEvent
 import android.view.View
 import com.nhaarman.mockito_kotlin.*
 import io.reactivex.Single
@@ -11,6 +12,7 @@ import me.kirimin.droidkaigikirimindemoapp.presentation.top.TopUseCase
 import me.kirimin.droidkaigikirimindemoapp.presentation.top.TopView
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyString
 
 class TopPresenterTest {
@@ -36,20 +38,16 @@ class TopPresenterTest {
     }
 
     @Test
-    fun onSubmitButtonClickTest() {
-        fun withEmptyText() {
-            initializeMocks()
+    fun userIdSubmitTest() {
+        whenever(useCaseMock.fetchUserInfo(anyString())).thenReturn(Single.never())
 
-            presenter.onSubmitButtonClick("")
+        fun isError() {
             verify(viewMock, times(1)).showErrorToast(anyString())
             verify(viewMock, never()).setProgressBarVisibility(View.VISIBLE)
             verify(useCaseMock, never()).fetchUserInfo(anyString())
         }
 
-        fun withNotEmptyText() {
-            initializeMocks()
-
-            presenter.onSubmitButtonClick("kirimin")
+        fun isSuccess() {
             verify(viewMock, never()).showErrorToast(anyString())
             verify(viewMock, times(1)).setParentLayoutVisibility(View.GONE)
             verify(viewMock, times(1)).setProgressBarVisibility(View.VISIBLE)
@@ -57,11 +55,45 @@ class TopPresenterTest {
             verify(viewMock, never()).setProgressBarVisibility(View.GONE)
             verify(useCaseMock, times(1)).fetchUserInfo("kirimin")
         }
-        whenever(useCaseMock.fetchUserInfo(anyString())).thenReturn(Single.never())
+
+        fun isIgnore() {
+            verify(viewMock, never()).showErrorToast(anyString())
+            verify(viewMock, never()).setProgressBarVisibility(anyInt())
+            verify(viewMock, never()).setParentLayoutVisibility(anyInt())
+            verify(useCaseMock, never()).fetchUserInfo(anyString())
+        }
+
+        fun isSubmitButtonClick() {
+            initializeMocks()
+            presenter.onSubmitButtonClick("")
+            isError()
+
+            initializeMocks()
+            presenter.onSubmitButtonClick("kirimin")
+            isSuccess()
+        }
+
+        fun withEditTextKeyEnter() {
+            initializeMocks()
+            presenter.onUserIdEditTextKeyListener("", KeyEvent.KEYCODE_ENTER, KeyEvent.ACTION_UP)
+            isError()
+
+            initializeMocks()
+            presenter.onUserIdEditTextKeyListener("kirimin", KeyEvent.KEYCODE_ENTER, KeyEvent.ACTION_UP)
+            isSuccess()
+
+            initializeMocks()
+            presenter.onUserIdEditTextKeyListener("kirimin", KeyEvent.KEYCODE_0, KeyEvent.ACTION_UP)
+            isIgnore()
+
+            initializeMocks()
+            presenter.onUserIdEditTextKeyListener("kirimin", KeyEvent.KEYCODE_ENTER, KeyEvent.ACTION_DOWN)
+            isIgnore()
+        }
 
         presenter.onCreate()
-        withEmptyText()
-        withNotEmptyText()
+        isSubmitButtonClick()
+        withEditTextKeyEnter()
     }
 
     @Test
@@ -74,9 +106,9 @@ class TopPresenterTest {
             }
 
             fun setUserInfoMinCase() {
-                initializeMocks()
                 val userEntity = UserEntity(name = "kirimin", location = null, company = null, blog = null, email = null, avatar_url = null)
                 whenever(useCaseMock.fetchUserInfo("kirimin")).thenReturn(Single.just(User(userEntity, listOf(RepositoryEntity()))))
+                initializeMocks()
 
                 presenter.onSubmitButtonClick("kirimin")
                 hideProgressAndShowUserInfoLayout()
@@ -88,9 +120,9 @@ class TopPresenterTest {
             }
 
             fun setUserInfoMaxCase() {
-                initializeMocks()
                 val userEntity = UserEntity(name = "kirimin", location = "tokyo, japan", company = "kirimin inc.", blog = "http://kirimin.me", email = "cc@kirimin.me", avatar_url = "http://kirimin.me/face_icon.png")
                 whenever(useCaseMock.fetchUserInfo("kirimin")).thenReturn(Single.just(User(userEntity, listOf(RepositoryEntity()))))
+                initializeMocks()
 
                 presenter.onSubmitButtonClick("kirimin")
                 hideProgressAndShowUserInfoLayout()
@@ -108,8 +140,8 @@ class TopPresenterTest {
         }
 
         fun failed() {
-            initializeMocks()
             whenever(useCaseMock.fetchUserInfo("kirimin")).thenReturn(Single.error(Exception("the error")))
+            initializeMocks()
 
             presenter.onSubmitButtonClick("kirimin")
             verify(viewMock, times(1)).setProgressBarVisibility(View.GONE)
