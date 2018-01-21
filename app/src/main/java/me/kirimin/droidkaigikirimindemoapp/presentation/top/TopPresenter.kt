@@ -10,7 +10,6 @@ import me.kirimin.droidkaigikirimindemoapp.domain.User
 class TopPresenter(val view: TopView, val useCase: TopUseCase) {
 
     lateinit var disposables: CompositeDisposable
-    var user: User? = null
 
     fun onCreate() {
         disposables = CompositeDisposable()
@@ -40,7 +39,6 @@ class TopPresenter(val view: TopView, val useCase: TopUseCase) {
         view.setProgressBarVisibility(View.VISIBLE)
         view.setParentLayoutVisibility(View.GONE)
         useCase.fetchUserInfo(id).subscribe({ user ->
-            this.user = user
             view.setProgressBarVisibility(View.GONE)
             view.setParentLayoutVisibility(View.VISIBLE)
             view.setUserName(user.name)
