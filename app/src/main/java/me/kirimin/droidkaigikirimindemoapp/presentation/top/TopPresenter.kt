@@ -2,18 +2,17 @@ package me.kirimin.droidkaigikirimindemoapp.presentation.top
 
 import android.view.View
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.Toast
-import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_top.*
+import me.kirimin.droidkaigikirimindemoapp.R
 import me.kirimin.droidkaigikirimindemoapp.domain.Repository
-import me.kirimin.droidkaigikirimindemoapp.domain.User
 
 class TopPresenter(val view: TopActivity) {
 
     val useCase = TopUseCase()
     lateinit var disposables: CompositeDisposable
-    var user: User? = null
 
     fun onCreate() {
         disposables = CompositeDisposable()
@@ -29,10 +28,10 @@ class TopPresenter(val view: TopActivity) {
             Toast.makeText(view, "validation error", Toast.LENGTH_SHORT).show()
             return
         }
-        view.progressBar.visibility = View.VISIBLE
+        val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
+        progressBar.visibility = View.VISIBLE
         useCase.fetchUserInfo(id).subscribe({ user ->
-            this.user = user
-            view.progressBar.visibility = View.GONE
+            progressBar.visibility = View.GONE
             view.setUserInfo(user)
             view.setLanguages(getLanguages(user.repositories))
             view.setRepositories(sortRepositories(user.repositories))
