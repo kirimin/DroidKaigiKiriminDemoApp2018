@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: "de.mannodermaus.android-junit5"
 
 android {
     compileSdkVersion 27
@@ -25,6 +26,25 @@ android {
     }
     kapt {
         generateStubs = true
+    }
+
+    testOptions {
+        junitPlatform {
+            filters {
+                engines {
+                    include 'spek2'
+                }
+            }
+            jacocoOptions {
+                // here goes all jacoco config, for example
+                html.enabled = true
+                xml.enabled = false
+                csv.enabled = false
+                unitTests.all {
+                    testLogging.events = ["passed", "skipped", "failed"]
+                }
+            }
+        }
     }
 }
 
@@ -53,11 +73,12 @@ dependencies {
 
     def mockito = '2.8.47'
     testImplementation "org.mockito:mockito-inline:$mockito"
-    androidTestImplementation "org.mockito:mockito-android:$mockito"
     testImplementation "com.nhaarman:mockito-kotlin-kt1.1:1.5.0"
-
     testImplementation "com.taroid.knit:knit:0.1.2"
-
+    testImplementation "org.spekframework.spek2:spek-dsl-jvm:2.0.0-rc.1"
+    testImplementation "org.spekframework.spek2:spek-runner-junit5:2.0.0-rc.1"
+    testImplementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    androidTestImplementation "org.mockito:mockito-android:$mockito"
 }
 repositories {
     mavenCentral()
