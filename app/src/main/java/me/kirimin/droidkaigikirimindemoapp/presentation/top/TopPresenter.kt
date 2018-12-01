@@ -3,8 +3,6 @@ package me.kirimin.droidkaigikirimindemoapp.presentation.top
 import android.view.KeyEvent
 import android.view.View
 import io.reactivex.disposables.CompositeDisposable
-import me.kirimin.droidkaigikirimindemoapp.domain.Language
-import me.kirimin.droidkaigikirimindemoapp.domain.Repository
 import me.kirimin.droidkaigikirimindemoapp.domain.User
 
 class TopPresenter(val view: TopView, val useCase: TopUseCase) {
@@ -47,17 +45,17 @@ class TopPresenter(val view: TopView, val useCase: TopUseCase) {
             if (user.location.isNullOrEmpty()) {
                 view.setLocationTextAndVisibility(View.GONE, "")
             } else {
-                view.setLocationTextAndVisibility(View.VISIBLE, user.location!!)
+                view.setLocationTextAndVisibility(View.VISIBLE, user.location)
             }
             if (user.mail.isNullOrEmpty()) {
                 view.setMailTextAndVisibility(View.GONE, "")
             } else {
-                view.setMailTextAndVisibility(View.VISIBLE, user.mail!!)
+                view.setMailTextAndVisibility(View.VISIBLE, user.mail)
             }
             if (user.link.isNullOrEmpty()) {
                 view.setLinkTextAndVisibility(View.GONE, "")
             } else {
-                view.setLinkTextAndVisibility(View.VISIBLE, user.link!!)
+                view.setLinkTextAndVisibility(View.VISIBLE, user.link)
             }
             if (user.iconUrl != null) {
                 view.setIconVisibility(View.VISIBLE)
